@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'index_page.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -7,24 +7,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: '百姓生活+',
-      debugShowCheckedModeBanner:false,
+      debugShowCheckedModeBanner:false,//debug图标隐藏
       theme: ThemeData(
         primaryColor: Colors.pink//控制整个app顶部appbar颜色
       ),
       home:IndexPage()
-    );
-  }
-}
-class IndexPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('百姓生活+'),
-      ),
-      body:Center(
-        child: Text('百姓生活+'),
-      )
     );
   }
 }
