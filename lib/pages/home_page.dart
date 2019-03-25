@@ -4,6 +4,7 @@ import 'package:flutter_swiper/flutter_swiper.dart';
 import 'dart:convert';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../widgets/top_navigator.dart';
+import '../widgets/ad_banner.dart';
 class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
@@ -23,11 +24,13 @@ class _HomePageState extends State<HomePage> {
               if(navigatorList.length>10){
                 navigatorList.removeRange(10, navigatorList.length);
               }
+              String advertesPicture = data['data']['advertesPicture']['PICTURE_ADDRESS'];//广告图片
               return Column(
-                  children: <Widget>[
-                    SwiperDiy(swiperDataList:swiperDataList ),   //页面顶部轮播组件
-                    TopNavigator(navigatorList: navigatorList)
-                  ],
+                children: <Widget>[
+                  SwiperDiy(swiperDataList:swiperDataList ),   //页面顶部轮播组件
+                  TopNavigator(navigatorList: navigatorList),//商品分类
+                  AdBanner(advertesPicture:advertesPicture),//广告图片
+                ],
               );
           }else{
             return Center(
