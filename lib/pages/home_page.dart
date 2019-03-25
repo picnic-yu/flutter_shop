@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../widgets/top_navigator.dart';
 import '../widgets/ad_banner.dart';
 import '../widgets/leader_phone.dart';
+import '../widgets/recommend.dart';
 class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
@@ -28,13 +29,17 @@ class _HomePageState extends State<HomePage> {
               String advertesPicture = data['data']['advertesPicture']['PICTURE_ADDRESS'];//广告图片
               String leaderImage = data['data']['shopInfo']['leaderImage'];//
               String leaderPhone = data['data']['shopInfo']['leaderPhone'];
-              return Column(
-                children: <Widget>[
-                  SwiperDiy(swiperDataList:swiperDataList ),   //页面顶部轮播组件
-                  TopNavigator(navigatorList: navigatorList),//商品分类
-                  AdBanner(advertesPicture:advertesPicture),//广告图片
-                  LeaderPhone(leaderImage:leaderImage,leaderPhone:leaderPhone),
-                ],
+              List<Map> recommendList =  (data['data']['recommend'] as List).cast(); //商品推荐
+              return SingleChildScrollView(
+                child:Column(
+                  children: <Widget>[
+                    SwiperDiy(swiperDataList:swiperDataList ),   //页面顶部轮播组件
+                    TopNavigator(navigatorList: navigatorList),//商品分类
+                    AdBanner(advertesPicture:advertesPicture),//广告图片
+                    LeaderPhone(leaderImage:leaderImage,leaderPhone:leaderPhone),
+                    Recommend(recommendList:recommendList)
+                  ],
+                )
               );
           }else{
             return Center(
