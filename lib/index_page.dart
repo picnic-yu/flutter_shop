@@ -4,13 +4,13 @@ import './pages/cart_page.dart';
 import './pages/category_page.dart';
 import './pages/home_page.dart';
 import './pages/member_page.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 class IndexPage extends StatefulWidget {
 
   _IndexPageState createState() => _IndexPageState();
 }
 
 class _IndexPageState extends State<IndexPage> {
-
   final List<BottomNavigationBarItem> bottomTabs = [
     BottomNavigationBarItem(
       icon:Icon(CupertinoIcons.home),
@@ -45,6 +45,7 @@ class _IndexPageState extends State<IndexPage> {
   }
   @override
   Widget build(BuildContext context) {
+    ScreenUtil.instance = ScreenUtil(width: 750, height: 1334)..init(context);
     return Scaffold(
       backgroundColor: Color.fromRGBO(244, 245, 245, 1.0),
       bottomNavigationBar: BottomNavigationBar(
