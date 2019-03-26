@@ -7,10 +7,14 @@ import '../widgets/top_navigator.dart';
 import '../widgets/ad_banner.dart';
 import '../widgets/leader_phone.dart';
 import '../widgets/recommend.dart';
+import '../widgets/floor_content.dart';
+import '../widgets/floor_title.dart';
 class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
+  @override
+  bool get wantKeepAlive =>true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,6 +34,12 @@ class _HomePageState extends State<HomePage> {
               String leaderImage = data['data']['shopInfo']['leaderImage'];//
               String leaderPhone = data['data']['shopInfo']['leaderPhone'];
               List<Map> recommendList =  (data['data']['recommend'] as List).cast(); //商品推荐
+              String floor1Title =data['data']['floor1Pic']['PICTURE_ADDRESS'];//楼层1的标题图片
+              String floor2Title =data['data']['floor2Pic']['PICTURE_ADDRESS'];//楼层1的标题图片
+              String floor3Title =data['data']['floor3Pic']['PICTURE_ADDRESS'];//楼层1的标题图片
+              List<Map> floor1 = (data['data']['floor1'] as List).cast(); //楼层1商品和图片 
+              List<Map> floor2 = (data['data']['floor2'] as List).cast(); //楼层1商品和图片 
+              List<Map> floor3 = (data['data']['floor3'] as List).cast(); //楼层1商品和图片 
               return SingleChildScrollView(
                 child:Column(
                   children: <Widget>[
@@ -37,7 +47,13 @@ class _HomePageState extends State<HomePage> {
                     TopNavigator(navigatorList: navigatorList),//商品分类
                     AdBanner(advertesPicture:advertesPicture),//广告图片
                     LeaderPhone(leaderImage:leaderImage,leaderPhone:leaderPhone),
-                    Recommend(recommendList:recommendList)
+                    Recommend(recommendList:recommendList),
+                    FloorTitle(picture_address:floor1Title),
+                    FloorContent(floorGoodsList:floor1),
+                    FloorTitle(picture_address:floor2Title),
+                    FloorContent(floorGoodsList:floor2),
+                    FloorTitle(picture_address:floor3Title),
+                    FloorContent(floorGoodsList:floor3),
                   ],
                 )
               );
