@@ -9,6 +9,7 @@ import '../widgets/leader_phone.dart';
 import '../widgets/recommend.dart';
 import '../widgets/floor_content.dart';
 import '../widgets/floor_title.dart';
+import '../widgets/hot_goods.dart';
 class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
@@ -17,11 +18,12 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
   bool get wantKeepAlive =>true;
   @override
   Widget build(BuildContext context) {
+    var formData = {'lon':'115.02932','lat':'35.76189'};
     return Scaffold(
       appBar: AppBar(title: Text('百姓生活+'),),
       body:FutureBuilder(
           // FutureBuilder Widget这是一个Flutter内置的组件，是用来等待异步请求的
-        future:getHomePageContent(),
+        future:request('homePageContext',formData:formData),
         builder: (context,snapshot){
           if(snapshot.hasData){
               var data=json.decode(snapshot.data.toString());
@@ -54,6 +56,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
                     FloorContent(floorGoodsList:floor2),
                     FloorTitle(picture_address:floor3Title),
                     FloorContent(floorGoodsList:floor3),
+                    HotGoods()
                   ],
                 )
               );
@@ -87,3 +90,5 @@ class SwiperDiy extends StatelessWidget {
     );
   }
 }
+
+
