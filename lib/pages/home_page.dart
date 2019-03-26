@@ -9,13 +9,23 @@ import '../widgets/leader_phone.dart';
 import '../widgets/recommend.dart';
 import '../widgets/floor_content.dart';
 import '../widgets/floor_title.dart';
-import '../widgets/hot_goods.dart';
+
+import 'package:flutter_easyrefresh/easy_refresh.dart';
+
 class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
+  GlobalKey<RefreshFooterState> _footerKey = new GlobalKey<RefreshFooterState>();
   @override
   bool get wantKeepAlive =>true;
+  int page = 1;
+  List<Map> hotGoodsList = [];
+  void initState() { 
+    super.initState();
+    _getHotGoods();
+  }
+
   @override
   Widget build(BuildContext context) {
     var formData = {'lon':'115.02932','lat':'35.76189'};
@@ -42,8 +52,22 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
               List<Map> floor1 = (data['data']['floor1'] as List).cast(); //楼层1商品和图片 
               List<Map> floor2 = (data['data']['floor2'] as List).cast(); //楼层1商品和图片 
               List<Map> floor3 = (data['data']['floor3'] as List).cast(); //楼层1商品和图片 
-              return SingleChildScrollView(
-                child:Column(
+              return EasyRefresh(
+                loadMore: ()async{
+                  print('load more====================================>');
+                  _getHotGoods();
+                },
+                refreshFooter: ClassicsFooter(
+                  key: _footerKey,
+                  bgColor: Colors.white,
+                  textColor: Colors.pink,
+                  moreInfoColor: Colors.pink,
+                  showMore: true,
+                  noMoreText: '',
+                  moreInfo: '加载中',
+                  loadReadyText: '上拉加载',
+                ),
+                child:ListView(
                   children: <Widget>[
                     SwiperDiy(swiperDataList:swiperDataList ),   //页面顶部轮播组件
                     TopNavigator(navigatorList: navigatorList),//商品分类
@@ -56,7 +80,9 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
                     FloorContent(floorGoodsList:floor2),
                     FloorTitle(picture_address:floor3Title),
                     FloorContent(floorGoodsList:floor3),
-                    HotGoods()
+                    Container(
+                      child:_hotGoods(),
+                    )
                   ],
                 )
               );
@@ -67,6 +93,100 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
           }
         },
       )
+    );
+  }
+
+  // 获取火爆商品方法
+  void _getHotGoods(){
+    var formPage={'page': page};
+    request('homePageBelowConten',formData:formPage).then((val){
+      var data = json.decode(val.toString());
+      List<Map> newGoodList = (data['data'] as List).cast();
+      setState(() {
+        hotGoodsList.addAll(newGoodList);
+        page++;
+      });
+    });
+  }
+  // 火爆标题
+  Widget _hotTitle(){
+    return Container(
+      margin: EdgeInsets.only(top: 10.0),
+      padding: EdgeInsets.all(5.0),
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border(
+          bottom: BorderSide(
+            width: 0.5,
+            color: Colors.black12
+          )
+        )
+      ),
+      child: Text('火爆专区'),
+    ); 
+  }
+
+  // 火爆专区子项
+  Widget _wrapList(){
+    if(hotGoodsList.length != 0){
+      List<Widget> listWidget =hotGoodsList.map((val){
+        return InkWell(
+          onTap: (){
+
+          },
+          child: Container(
+            width: ScreenUtil().setWidth(372),
+            color: Colors.white,
+            padding: EdgeInsets.all(5.0),
+            margin: EdgeInsets.only(bottom: 3.0),
+            child: Column(
+              children: <Widget>[
+                Image.network(
+                  val['image'],
+                  width:ScreenUtil().setWidth(375)
+                ),
+                Text(
+                  val['name'],
+                  maxLines:1,
+                  overflow:TextOverflow.ellipsis,
+                  style:TextStyle(
+                    color:Colors.pink,
+                    fontSize:ScreenUtil().setSp(26),
+                  )
+                ),
+                Row(
+                  children: <Widget>[
+                    Text('￥${val['mallPrice']}'),
+                    Text(
+                      '￥${val['price']}',
+                      style: TextStyle(color:Colors.black26,decoration: TextDecoration.lineThrough),
+                    )
+                  ],
+                )
+              ],
+            ),
+          ),
+        );
+      }).toList();
+
+      return Wrap(
+        spacing:2,
+        children:listWidget,
+      );
+    }else{
+      return Text('');
+    }
+  }
+  // 火爆专区组合
+  Widget _hotGoods(){
+    return Container(
+      child:Column(
+        children: <Widget>[
+          _hotTitle(),
+          _wrapList(),
+        ],
+      )   
     );
   }
 }
